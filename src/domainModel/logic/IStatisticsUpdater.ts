@@ -1,6 +1,6 @@
 import NewStatistics from "../models/NewStatistics";
-import Statistics from "../models/statistics";
+import Palabra from "../models/Palabra";
 
 export default interface IStatisticsUpdater{
-    updateStatistics(statistics: Statistics, newData: NewStatistics): Statistics
+    updatePalabra(oldPalabra: Palabra, newData: NewStatistics): Palabra
 }

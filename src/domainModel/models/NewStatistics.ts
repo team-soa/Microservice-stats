@@ -1,3 +1,6 @@
+import Palabra from "./Palabra"
+
 export default class NewStatistics{
-    username:string|undefined
+    word:string|undefined
+    score:number|undefined
 }

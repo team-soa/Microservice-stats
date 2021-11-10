@@ -5,10 +5,13 @@ import MessageReceiver from "../applicationServices/messages/listener/MessageRec
 import IStatisticsUpdater from "../domainModel/logic/IStatisticsUpdater";
 import StatisticsUpdater from "../domainModel/logic/StatisticsUpdater";
 import IMessageExecuter from "../domainServices/executers/IMessageExecuter";
-import InitializeStatisticsExecuters from "../domainServices/executers/InitializeStatisticsExecuter";
-import UpdateStatisticsExecuter from "../domainServices/executers/UpdateStatisticsExecuter";
-import IStatisticsManager from "../domainServices/managers/IStatisticsManager";
-import StatisticsManager from "../domainServices/managers/StatisticsManager";
+import UpdateStatisticsExecuter from "../domainServices/executers/UpdatePalabraStatisticsExecuter";
+import ArtistaManager from "../domainServices/managers/ArtistaManager";
+import CancionManager from "../domainServices/managers/CancionManager";
+import IArtistaManager from "../domainServices/managers/IArtistaManager";
+import ICancionManager from "../domainServices/managers/ICancionManager";
+import IPalabraManager from "../domainServices/managers/IPalabraManager";
+import PalabraManager from "../domainServices/managers/PalabraManager";
 
 var createError = require('http-errors');
 var express = require('express');
@@ -18,7 +21,9 @@ var logger = require('morgan');
 const keycloak = require('../applicationServices/config/keycloak').initKeycloak();
 var session = require('express-session');
 
-var statsRouter = require('../applicationServices/routes/stats');
+var cancionesRouter = require('../applicationServices/routes/cancion');
+var artistasRouter = require('../applicationServices/routes/artista');
+var palabrasRouter = require('../applicationServices/routes/palabras');
 
 var corsOptions = {
   origin: ['http://localhost:4200/', 'http://168.62.39.210:3000/'],
@@ -48,7 +53,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/stats', statsRouter);
+
+app.use('/artistas', artistasRouter);
+app.use('/palabras', palabrasRouter);
+app.use('/canciones', cancionesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req: any, res: any, next: (arg0: any) => void) {
@@ -68,19 +76,18 @@ app.use(function(err:any, req:any, res:any, next:any) {
 
 const rabbitHost = "amqp://"+process.env.rabbit_url
 const connectionString =  'mongodb+srv://client:HzKRkF8M52TTjidj@cluster0.uaqcj.mongodb.net/test'
-const initializeStatisticsQueue = 'initializeStatistics'
-const updateStatisticsQueue = 'updateStatistics'
+const updateStatisticsQueue = 'Speech'
 
 
 let dataBase: IDataBase = new MongoDataBase(connectionString)
 let messageReceiver: IMessageReceiver = new MessageReceiver(rabbitHost)
 let statisticsUpdater: IStatisticsUpdater = new StatisticsUpdater()
-let statisticsManager: IStatisticsManager = new StatisticsManager(dataBase)
-let initializeStatisticsExecuter: IMessageExecuter = new InitializeStatisticsExecuters(statisticsManager)
-let updateStatisticsExecuter: IMessageExecuter = new UpdateStatisticsExecuter(statisticsManager, statisticsUpdater)
+let cancionManager: ICancionManager = new CancionManager(dataBase)
+let artistaManager: IArtistaManager = new ArtistaManager(dataBase)
+let palabraManager: IPalabraManager = new PalabraManager(dataBase, statisticsUpdater)
+let updateStatisticsExecuter: IMessageExecuter = new UpdateStatisticsExecuter(palabraManager)
 
-messageReceiver.setListener(initializeStatisticsQueue, initializeStatisticsExecuter)
 messageReceiver.setListener(updateStatisticsQueue, updateStatisticsExecuter)
 
 
-export {app, corsOptions, statisticsManager}
+export {app, corsOptions, cancionManager, artistaManager, palabraManager}
