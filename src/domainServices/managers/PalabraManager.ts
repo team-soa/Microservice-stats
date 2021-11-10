@@ -3,6 +3,7 @@ import IStatisticsUpdater from "../../domainModel/logic/IStatisticsUpdater";
 import NewStatistics from "../../domainModel/models/NewStatistics";
 import Palabra from "../../domainModel/models/Palabra";
 import IPalabraManager from "./IPalabraManager";
+import { OrderEnum } from "./OrderEnum";
 
 export default class PalabraManager implements IPalabraManager{
     dataBase:IDataBase
@@ -12,7 +13,15 @@ export default class PalabraManager implements IPalabraManager{
         this.statisticsUpdater = statisticsUpdater;
     }
     async getPalabrasStatistics():Promise<Palabra[]>{
-        return (await this.dataBase.getPalabras()).sort((a,b)=>b.presicion!-a.presicion!)
+        return await this.dataBase.getPalabras()
+    }
+
+    async getPalabrasStatisticsByOrder(order:OrderEnum):Promise<Palabra[]>{
+        if(order === OrderEnum.Descending){
+            return (await this.getPalabrasStatistics()).sort((a,b)=>b.presicion!-a.presicion!)
+        }else{
+            return (await this.getPalabrasStatistics()).sort((a,b)=>a.presicion!-b.presicion!)
+        }
     }
 
     async updatePalabrasStatistics(palabra: string, newStatistics:NewStatistics):Promise<Boolean>{
