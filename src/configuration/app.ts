@@ -26,7 +26,7 @@ var artistasRouter = require('../applicationServices/routes/artista');
 var palabrasRouter = require('../applicationServices/routes/palabras');
 
 var corsOptions = {
-  origin: ['http://localhost:4200/', 'http://168.62.39.210:3000/'],
+  origin: ['*'],
   optionsSuccessStatus: 200
 }
 
