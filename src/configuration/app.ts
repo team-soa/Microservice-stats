@@ -74,8 +74,8 @@ app.use(function(err:any, req:any, res:any, next:any) {
   res.render('error');
 });
 
-const rabbitHost = "amqp://"+process.env.rabbit_url
-const connectionString =  'mongodb+srv://client:HzKRkF8M52TTjidj@cluster0.uaqcj.mongodb.net/test'
+const rabbitHost = "amqp://"+<string>process.env.rabbit_url
+const connectionString = <string>process.env.db_string
 const updateStatisticsQueue = 'Speech'
 
 
