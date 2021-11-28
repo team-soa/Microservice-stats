@@ -20,6 +20,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const keycloak = require('../applicationServices/config/keycloak').initKeycloak();
 var session = require('express-session');
+var cors = require('cors')
 
 var cancionesRouter = require('../applicationServices/routes/cancion');
 var artistasRouter = require('../applicationServices/routes/artista');
@@ -31,6 +32,11 @@ var corsOptions = {
 }
 
 var app = express();
+
+app.use(cors({
+  origin: '*'
+}));
+
 
 var memoryStore = new session.MemoryStore();
 

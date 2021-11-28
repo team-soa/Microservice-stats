@@ -6,7 +6,7 @@ import Artista from '../../domainModel/models/Artista';
 const keycloak2 = require('../config/keycloak').getKeycloak();
 
 
-router.get('/',  keycloak2.protect('user'), cors(corsOptions), async function(req:any, res:any, next:any) {
+router.get('/', cors(corsOptions), async function(req:any, res:any, next:any) {
   try{
     let statistics: Artista[] = await artistaManager.getArtistasStatistics()
     if(statistics){
@@ -21,7 +21,7 @@ router.get('/',  keycloak2.protect('user'), cors(corsOptions), async function(re
   }
 });
 
-router.post('/update/:artista',  keycloak2.protect('user'), cors(corsOptions), async function(req:any, res:any, next:any) {
+router.post('/update/:artista', cors(corsOptions), async function(req:any, res:any, next:any) {
   try{
     let artista = req.params.artista
     let result = await artistaManager.increaseArtistaReproductions(artista)

@@ -7,7 +7,7 @@ import { OrderEnum } from '../../domainServices/managers/OrderEnum';
 const keycloak2 = require('../config/keycloak').getKeycloak();
 
 
-router.get('/',  keycloak2.protect('user'), cors(corsOptions), async function(req:any, res:any, next:any) {
+router.get('/', cors(corsOptions), async function(req:any, res:any, next:any) {
   try{
     let order = req.query.order
     let orderEnum = OrderEnum.Descending

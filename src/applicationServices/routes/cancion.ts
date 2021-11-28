@@ -6,7 +6,7 @@ import Cancion from '../../domainModel/models/Cancion';
 const keycloak2 = require('../config/keycloak').getKeycloak();
 
 
-router.get('/',  keycloak2.protect('user'), cors(corsOptions), async function(req:any, res:any, next:any) {
+router.get('/', cors(corsOptions), async function(req:any, res:any, next:any) {
   try{
     let statistics: Cancion[] = await cancionManager.getCancionsStatistics()
     if(statistics){
@@ -21,7 +21,7 @@ router.get('/',  keycloak2.protect('user'), cors(corsOptions), async function(re
   }
 });
 
-router.post('/update/:cancion',  keycloak2.protect('user'), cors(corsOptions), async function(req:any, res:any, next:any) {
+router.post('/update/:cancion',   cors(corsOptions), async function(req:any, res:any, next:any) {
   try{
     let cancion = req.params.cancion
     let result = await cancionManager.increaseCancionReproductions(cancion)
